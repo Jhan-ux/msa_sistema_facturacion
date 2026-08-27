@@ -17,26 +17,28 @@ use App\Http\Controllers\ProfileController;
 |--------------------------------------------------------------------------
 */
 
-// Rutas de Autenticación
+// Rutas de Autenticación Pública
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// Cambio de Contexto Multi-Empresa & Multi-Sede
-Route::post('/context/empresa', [ContextController::class, 'setEmpresa'])->name('context.set_empresa');
-Route::post('/context/sede', [ContextController::class, 'setSede'])->name('context.set_sede');
-
-// Rutas API para Consultas Asíncronas (SUNAT / RENIEC)
-Route::get('/api/sunat/ruc/{ruc}', [SunatApiController::class, 'consultarRuc'])->name('api.sunat.ruc');
-Route::get('/api/sunat/dni/{dni}', [SunatApiController::class, 'consultarDni'])->name('api.sunat.dni');
 
 // Redirección Principal
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-// Rutas del Sistema (Dashboard, Perfil, CxP, CxC, Pagos, Reportes)
-Route::middleware(['web'])->group(function () {
+// Rutas Protegidas del Sistema (Requieren Autenticación)
+Route::middleware(['web', 'auth'])->group(function () {
+    // Cambio de Contexto Multi-Empresa & Multi-Sede
+    Route::post('/context/empresa', [ContextController::class, 'setEmpresa'])->name('context.set_empresa');
+    Route::post('/context/sede', [ContextController::class, 'setSede'])->name('context.set_sede');
+
+    // Rutas API para Consultas Asíncronas (SUNAT / RENIEC) con Throttling
+    Route::middleware('throttle:60,1')->group(function () {
+        Route::get('/api/sunat/ruc/{ruc}', [SunatApiController::class, 'consultarRuc'])->name('api.sunat.ruc');
+        Route::get('/api/sunat/dni/{dni}', [SunatApiController::class, 'consultarDni'])->name('api.sunat.dni');
+    });
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Módulo Perfil de Usuario & Cambio de Contraseña

@@ -84,9 +84,9 @@ class ProfileController extends Controller
             ])->with('error_password', true);
         }
 
-        // Actualizar contraseña encriptada
+        // Actualizar contraseña (el modelo User ya tiene el cast 'password' => 'hashed')
         $user->update([
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
         ]);
 
         return redirect()->route('perfil.show')->with('success', '¡Tu contraseña ha sido actualizada con éxito!');

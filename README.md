@@ -150,3 +150,38 @@ Para más información sobre la arquitectura y diseño técnico, consulta la car
 ## 📄 Licencia
 
 Este proyecto es software de código abierto licenciado bajo la [Licencia MIT](https://opensource.org/licenses/MIT).
+
+## Resumen de funciones del software:
+
+El software es una herramienta integral de gestiòn de cobranzas y pagos, que permite llevar un control detallado de las cuentas por cobrar y cuentas por pagar de una empresa, controlando de manera precisa el estado de cada cuenta, generando reportes, estados de cuenta y consultas en linea a la base de datos de la SUNAT y RENIEC, ademas de contar con un motor de alertas para notificar los pagos recibidos y los pagos por vencer.
+
+
+## Funciones especificas del Software:
+
+1. **Módulo de Gestión de Comprobantes de Compra (CxP)**:
+   1.1. Registro de Comprobantes de Compra: El usuario puede registrar comprobantes de compra, tales como facturas, boletas de venta, notas de crédito, notas de débito y tickets.
+   1.2. Gestión de Pagos a Proveedores: El usuario puede registrar pagos a proveedores, tales como pagos por adelantado, pagos parciales y pagos completos.
+   1.3. Historial de Pagos a Proveedores: El usuario puede ver el historial de pagos realizados a proveedores.
+   1.4. Reportes de Cuentas por Pagar: El usuario puede generar reportes de cuentas por pagar.
+   1.5. Consultas a la SUNAT: El usuario puede consultar a la SUNAT para obtener información sobre los comprobantes de compra.
+   
+2. **Módulo de Gestión de Comprobantes de Venta (CxC)**:
+   2.1. Registro de Comprobantes de Venta: El usuario puede registrar comprobantes de venta, tales como facturas, boletas de venta, notas de crédito, notas de débito y tickets.
+   2.2. Gestión de Pagos a Clientes: El usuario puede registrar pagos a clientes, tales como pagos por adelantado, pagos parciales y pagos completos.
+   2.3. Historial de Pagos a Clientes: El usuario puede ver el historial de pagos realizados a clientes.
+   2.4. Reportes de Cuentas por Cobrar: El usuario puede generar reportes de cuentas por cobrar.
+   2.5. Consultas a la SUNAT: El usuario puede consultar a la SUNAT para obtener información sobre los comprobantes de venta.
+
+3. **Módulo de Gestión de Clientes**:
+   3.1. Registro de Clientes: El usuario puede registrar clientes.
+   3.2. Actualización de Datos de Clientes: El usuario puede actualizar los datos de los clientes.
+   3.3. Eliminación de Clientes: El usuario puede eliminar clientes.
+   3.4. Historial de Clientes: El usuario puede ver el historial de clientes.
+   3.5. Consultas a RENIEC: El usuario puede consultar a RENIEC para obtener información sobre los clientes.
+
+4. **Módulo de Gestión de Proveedores**:
+   4.1. Registro de Proveedores: El usuario puede registrar proveedores.
+   4.2. Actualización de Datos de Proveedores: El usuario puede actualizar los datos de los proveedores.
+   4.3. Eliminación de Proveedores: El usuario puede eliminar proveedores.
+   4.4. Historial de Proveedores: El usuario puede ver el historial de proveedores.
+   4.5. Consultas a RENIEC: El usuario puede consultar a RENIEC para obtener información sobre los proveedores.

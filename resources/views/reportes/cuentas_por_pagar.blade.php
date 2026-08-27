@@ -83,15 +83,25 @@
             </thead>
             <tbody>
                 @php 
-                    $sumTotal = 0;
-                    $sumPagado = 0;
-                    $sumSaldo = 0;
+                    $sumTotalPen = 0;
+                    $sumPagadoPen = 0;
+                    $sumSaldoPen = 0;
+
+                    $sumTotalUsd = 0;
+                    $sumPagadoUsd = 0;
+                    $sumSaldoUsd = 0;
                 @endphp
                 @foreach($comprobantes as $i => $comp)
                     @php
-                        $sumTotal += $comp->monto_total;
-                        $sumPagado += $comp->monto_pagado;
-                        $sumSaldo += $comp->saldo_pendiente;
+                        if ($comp->moneda === 'USD') {
+                            $sumTotalUsd += $comp->monto_total;
+                            $sumPagadoUsd += $comp->monto_pagado;
+                            $sumSaldoUsd += $comp->saldo_pendiente;
+                        } else {
+                            $sumTotalPen += $comp->monto_total;
+                            $sumPagadoPen += $comp->monto_pagado;
+                            $sumSaldoPen += $comp->saldo_pendiente;
+                        }
                     @endphp
                     <tr>
                         <td>{{ $i + 1 }}</td>
@@ -104,9 +114,9 @@
                         <td class="small {{ $comp->dias_restantes < 0 && $comp->saldo_pendiente > 0 ? 'text-danger fw-bold' : '' }}">
                             {{ $comp->fecha_vencimiento->format('d/m/Y') }}
                         </td>
-                        <td class="text-end fw-bold">{{ $comp->moneda }} {{ number_format($comp->monto_total, 2) }}</td>
-                        <td class="text-end text-success fw-semibold">{{ $comp->moneda }} {{ number_format($comp->monto_pagado, 2) }}</td>
-                        <td class="text-end text-danger fw-bold">{{ $comp->moneda }} {{ number_format($comp->saldo_pendiente, 2) }}</td>
+                        <td class="text-end fw-bold">{{ $comp->moneda === 'USD' ? '$' : 'S/' }} {{ number_format($comp->monto_total, 2) }}</td>
+                        <td class="text-end text-success fw-semibold">{{ $comp->moneda === 'USD' ? '$' : 'S/' }} {{ number_format($comp->monto_pagado, 2) }}</td>
+                        <td class="text-end text-danger fw-bold">{{ $comp->moneda === 'USD' ? '$' : 'S/' }} {{ number_format($comp->saldo_pendiente, 2) }}</td>
                         <td>
                             @if($comp->estado_pago === 'PAGADO')
                                 <span class="badge bg-success">PAGADO</span>
@@ -121,12 +131,21 @@
             </tbody>
             <tfoot class="table-light fw-bold">
                 <tr>
-                    <td colspan="8" class="text-end text-uppercase">Totales Consolidados:</td>
-                    <td class="text-end">S/ {{ number_format($sumTotal, 2) }}</td>
-                    <td class="text-end text-success">S/ {{ number_format($sumPagado, 2) }}</td>
-                    <td class="text-end text-danger">S/ {{ number_format($sumSaldo, 2) }}</td>
+                    <td colspan="8" class="text-end text-uppercase">Total Consolidado Soles (PEN):</td>
+                    <td class="text-end">S/ {{ number_format($sumTotalPen, 2) }}</td>
+                    <td class="text-end text-success">S/ {{ number_format($sumPagadoPen, 2) }}</td>
+                    <td class="text-end text-danger">S/ {{ number_format($sumSaldoPen, 2) }}</td>
                     <td></td>
                 </tr>
+                @if($sumTotalUsd > 0)
+                <tr>
+                    <td colspan="8" class="text-end text-uppercase text-info-emphasis">Total Consolidado Dólares (USD):</td>
+                    <td class="text-end text-info-emphasis">$ {{ number_format($sumTotalUsd, 2) }}</td>
+                    <td class="text-end text-success">$ {{ number_format($sumPagadoUsd, 2) }}</td>
+                    <td class="text-end text-danger">$ {{ number_format($sumSaldoUsd, 2) }}</td>
+                    <td></td>
+                </tr>
+                @endif
             </tfoot>
         </table>
     </div>

@@ -28,9 +28,12 @@ class SetActiveEmpresaSede
             $empresasDisponibles = Empresa::where('activo', true)->get();
         }
 
-        // 2. Determinar empresa activa
+        // 2. Determinar empresa activa y validar pertenencia
         $activeEmpresaId = session('active_empresa_id');
-        if ($activeEmpresaId === null && $empresasDisponibles->isNotEmpty()) {
+        if ($activeEmpresaId && !$empresasDisponibles->pluck('id')->contains($activeEmpresaId)) {
+            $activeEmpresaId = $empresasDisponibles->isNotEmpty() ? $empresasDisponibles->first()->id : null;
+            session(['active_empresa_id' => $activeEmpresaId]);
+        } elseif ($activeEmpresaId === null && $empresasDisponibles->isNotEmpty() && (!$user || !$user->isSuperAdmin())) {
             $activeEmpresaId = $empresasDisponibles->first()->id;
             session(['active_empresa_id' => $activeEmpresaId]);
         }

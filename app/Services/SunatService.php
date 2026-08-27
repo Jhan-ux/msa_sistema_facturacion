@@ -13,9 +13,9 @@ class SunatService
 
     public function __construct()
     {
-        $this->token = env('SUNAT_API_TOKEN', null);
-        $this->rucApiUrl = env('SUNAT_API_URL', 'https://api.apis.net.pe/v2/sunat/ruc');
-        $this->dniApiUrl = env('RENIEC_API_URL', 'https://api.apis.net.pe/v2/reniec/dni');
+        $this->token = config('services.sunat.token');
+        $this->rucApiUrl = config('services.sunat.ruc_url', 'https://api.apis.net.pe/v2/sunat/ruc');
+        $this->dniApiUrl = config('services.sunat.dni_url', 'https://api.apis.net.pe/v2/reniec/dni');
     }
 
     /**

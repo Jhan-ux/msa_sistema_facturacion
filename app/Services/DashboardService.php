@@ -6,6 +6,7 @@ use App\Models\ComprobanteCompra;
 use App\Models\ComprobanteVenta;
 use App\Models\Area;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardService
 {
@@ -16,23 +17,40 @@ class DashboardService
     {
         $hoy = Carbon::today()->toDateString();
         $proximos7Dias = Carbon::today()->addDays(7)->toDateString();
+        $user = Auth::user();
 
         // 1. Query base para Ventas (CxC)
         $queryVentas = ComprobanteVenta::with(['empresa', 'sede', 'cliente', 'area']);
         if ($empresaId) {
             $queryVentas->where('empresa_id', $empresaId);
+        } elseif ($user && !$user->isSuperAdmin()) {
+            $queryVentas->whereIn('empresa_id', $user->empresas()->pluck('empresas.id'));
         }
+
         if ($sedeId) {
             $queryVentas->where('sede_id', $sedeId);
+        } elseif ($user && !$user->isSuperAdmin()) {
+            $sedesPermitidas = $user->sedes()->pluck('sedes.id');
+            if ($sedesPermitidas->isNotEmpty()) {
+                $queryVentas->whereIn('sede_id', $sedesPermitidas);
+            }
         }
 
         // 2. Query base para Compras (CxP)
         $queryCompras = ComprobanteCompra::with(['empresa', 'sede', 'proveedor', 'area']);
         if ($empresaId) {
             $queryCompras->where('empresa_id', $empresaId);
+        } elseif ($user && !$user->isSuperAdmin()) {
+            $queryCompras->whereIn('empresa_id', $user->empresas()->pluck('empresas.id'));
         }
+
         if ($sedeId) {
             $queryCompras->where('sede_id', $sedeId);
+        } elseif ($user && !$user->isSuperAdmin()) {
+            $sedesPermitidas = $user->sedes()->pluck('sedes.id');
+            if ($sedesPermitidas->isNotEmpty()) {
+                $queryCompras->whereIn('sede_id', $sedesPermitidas);
+            }
         }
 
         // 3. Totales de Cuentas por Cobrar (Soles y Dólares)

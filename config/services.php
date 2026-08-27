@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'sunat' => [
+        'token' => env('SUNAT_API_TOKEN', null),
+        'ruc_url' => env('SUNAT_API_URL', 'https://api.apis.net.pe/v2/sunat/ruc'),
+        'dni_url' => env('RENIEC_API_URL', 'https://api.apis.net.pe/v2/reniec/dni'),
+    ],
+
 ];

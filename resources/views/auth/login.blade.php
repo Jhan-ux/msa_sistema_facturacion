@@ -39,7 +39,7 @@
                     <label for="username" class="form-label small fw-bold text-muted">USUARIO</label>
                     <div class="input-group">
                         <span class="input-group-text bg-light border-end-0 text-muted"><i class="fa-solid fa-user"></i></span>
-                        <input type="text" name="username" id="username" class="form-control border-start-0 ps-0" placeholder="Ingrese su usuario" value="{{ old('username', 'admin') }}" required autofocus autocomplete="username">
+                        <input type="text" name="username" id="username" class="form-control border-start-0 ps-0" placeholder="Ingrese su usuario" value="{{ old('username', app()->environment('local') ? 'admin' : '') }}" required autofocus autocomplete="username">
                     </div>
                 </div>
 
@@ -47,7 +47,7 @@
                     <label for="password" class="form-label small fw-bold text-muted">CONTRASEÑA</label>
                     <div class="input-group">
                         <span class="input-group-text bg-light border-end-0 text-muted"><i class="fa-solid fa-lock"></i></span>
-                        <input type="password" name="password" id="password" class="form-control border-start-0 ps-0" placeholder="••••••••" value="admin123" required autocomplete="current-password">
+                        <input type="password" name="password" id="password" class="form-control border-start-0 ps-0" placeholder="••••••••" value="{{ app()->environment('local') ? 'admin123' : '' }}" required autocomplete="current-password">
                     </div>
                 </div>
 
@@ -56,8 +56,9 @@
                 </button>
             </form>
 
+            @if(app()->environment('local'))
             <div class="mt-4 pt-3 border-top text-center">
-                <div class="text-muted small mb-2 fw-semibold">Acceso rápido para demostración:</div>
+                <div class="text-muted small mb-2 fw-semibold">Acceso rápido para demostración (Local):</div>
                 <div class="d-flex justify-content-center gap-2 demo-buttons">
                     <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setDemo('admin', 'admin123')">
                         <i class="fa-solid fa-user-shield me-1"></i> Admin
@@ -67,6 +68,7 @@
                     </button>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 </div>

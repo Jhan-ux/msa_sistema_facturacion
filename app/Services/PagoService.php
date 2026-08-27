@@ -19,12 +19,12 @@ class PagoService
         return DB::transaction(function () use ($compraId, $datos, $userId) {
             $compra = ComprobanteCompra::lockForUpdate()->findOrFail($compraId);
 
-            $montoAbono = floatval($datos['monto']);
+            $montoAbono = round(floatval($datos['monto']), 2);
             if ($montoAbono <= 0) {
                 throw new Exception("El monto del adelanto debe ser mayor a cero.");
             }
 
-            if ($montoAbono > floatval($compra->saldo_pendiente)) {
+            if ($montoAbono > round(floatval($compra->saldo_pendiente), 2)) {
                 throw new Exception("El monto no puede ser mayor al saldo pendiente (" . number_format($compra->saldo_pendiente, 2) . ").");
             }
 
@@ -41,12 +41,12 @@ class PagoService
                 'user_id' => $userId ?? Auth::id() ?? 1,
             ]);
 
-            // Recalcular montos del comprobante
-            $totalPagado = PagoAbono::where('comprobante_compra_id', $compra->id)->sum('monto');
-            $saldo = max(0, floatval($compra->monto_total) - floatval($totalPagado));
+            // Recalcular montos del comprobante con redondeo estricto
+            $totalPagado = round(floatval(PagoAbono::where('comprobante_compra_id', $compra->id)->sum('monto')), 2);
+            $saldo = max(0, round(floatval($compra->monto_total) - $totalPagado, 2));
 
             $estado = 'PENDIENTE';
-            if ($saldo <= 0.001) {
+            if ($saldo <= 0.00) {
                 $estado = 'PAGADO';
             } elseif ($totalPagado > 0) {
                 $estado = 'CON_ADELANTO';
@@ -70,12 +70,12 @@ class PagoService
         return DB::transaction(function () use ($ventaId, $datos, $userId) {
             $venta = ComprobanteVenta::lockForUpdate()->findOrFail($ventaId);
 
-            $montoAbono = floatval($datos['monto']);
+            $montoAbono = round(floatval($datos['monto']), 2);
             if ($montoAbono <= 0) {
                 throw new Exception("El monto del adelanto debe ser mayor a cero.");
             }
 
-            if ($montoAbono > floatval($venta->saldo_pendiente)) {
+            if ($montoAbono > round(floatval($venta->saldo_pendiente), 2)) {
                 throw new Exception("El monto no puede ser mayor al saldo pendiente (" . number_format($venta->saldo_pendiente, 2) . ").");
             }
 
@@ -92,12 +92,12 @@ class PagoService
                 'user_id' => $userId ?? Auth::id() ?? 1,
             ]);
 
-            // Recalcular montos
-            $totalCobrado = PagoAbono::where('comprobante_venta_id', $venta->id)->sum('monto');
-            $saldo = max(0, floatval($venta->monto_total) - floatval($totalCobrado));
+            // Recalcular montos con redondeo estricto
+            $totalCobrado = round(floatval(PagoAbono::where('comprobante_venta_id', $venta->id)->sum('monto')), 2);
+            $saldo = max(0, round(floatval($venta->monto_total) - $totalCobrado, 2));
 
             $estado = 'PENDIENTE';
-            if ($saldo <= 0.001) {
+            if ($saldo <= 0.00) {
                 $estado = 'PAGADO';
             } elseif ($totalCobrado > 0) {
                 $estado = 'CON_ADELANTO';
@@ -126,11 +126,11 @@ class PagoService
                 $pago->delete();
 
                 $compra = ComprobanteCompra::lockForUpdate()->findOrFail($compraId);
-                $totalPagado = PagoAbono::where('comprobante_compra_id', $compraId)->sum('monto');
-                $saldo = max(0, floatval($compra->monto_total) - floatval($totalPagado));
+                $totalPagado = round(floatval(PagoAbono::where('comprobante_compra_id', $compraId)->sum('monto')), 2);
+                $saldo = max(0, round(floatval($compra->monto_total) - $totalPagado, 2));
 
                 $estado = 'PENDIENTE';
-                if ($saldo <= 0.001) {
+                if ($saldo <= 0.00) {
                     $estado = 'PAGADO';
                 } elseif ($totalPagado > 0) {
                     $estado = 'CON_ADELANTO';
@@ -146,11 +146,11 @@ class PagoService
                 $pago->delete();
 
                 $venta = ComprobanteVenta::lockForUpdate()->findOrFail($ventaId);
-                $totalCobrado = PagoAbono::where('comprobante_venta_id', $ventaId)->sum('monto');
-                $saldo = max(0, floatval($venta->monto_total) - floatval($totalCobrado));
+                $totalCobrado = round(floatval(PagoAbono::where('comprobante_venta_id', $ventaId)->sum('monto')), 2);
+                $saldo = max(0, round(floatval($venta->monto_total) - $totalCobrado, 2));
 
                 $estado = 'PENDIENTE';
-                if ($saldo <= 0.001) {
+                if ($saldo <= 0.00) {
                     $estado = 'PAGADO';
                 } elseif ($totalCobrado > 0) {
                     $estado = 'CON_ADELANTO';

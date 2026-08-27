@@ -39,6 +39,16 @@ function filtrarSedesPorEmpresa() {
     if (primeraSede) selectSede.value = primeraSede;
 }
 
+function escapeHtml(text) {
+    if (!text) return '';
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 function buscarProveedorSunat() {
     const inputRuc = document.getElementById('inputRuc');
     const btn = document.getElementById('btnBuscarSunat');
@@ -56,7 +66,7 @@ function buscarProveedorSunat() {
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Consultando...';
     mensaje.innerHTML = '<span class="text-muted">Consultando padrón SUNAT...</span>';
 
-    fetch(`/api/sunat/ruc/${ruc}`)
+    fetch(`/api/sunat/ruc/${encodeURIComponent(ruc)}`)
         .then(res => res.json())
         .then(data => {
             btn.disabled = false;
@@ -67,7 +77,7 @@ function buscarProveedorSunat() {
                 document.getElementById('inputRazonSocial').value = d.razon_social;
                 if (d.direccion) document.getElementById('inputDireccion').value = d.direccion;
 
-                mensaje.innerHTML = `<span class="text-success"><i class="fa-solid fa-circle-check"></i> Encontrado: ${d.razon_social} (Estado: ${d.estado} / Condición: ${d.condicion})</span>`;
+                mensaje.innerHTML = `<span class="text-success"><i class="fa-solid fa-circle-check"></i> Encontrado: ${escapeHtml(d.razon_social)} (Estado: ${escapeHtml(d.estado)} / Condición: ${escapeHtml(d.condicion)})</span>`;
                 Swal.fire({
                     icon: 'success',
                     title: 'Proveedor Encontrado',
@@ -76,7 +86,7 @@ function buscarProveedorSunat() {
                     showConfirmButton: false
                 });
             } else {
-                mensaje.innerHTML = `<span class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> ${data.message || 'No se encontraron datos automáticos. Ingrese los datos manualmente.'}</span>`;
+                mensaje.innerHTML = `<span class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> ${escapeHtml(data.message || 'No se encontraron datos automáticos. Ingrese los datos manualmente.')}</span>`;
             }
         })
         .catch(err => {

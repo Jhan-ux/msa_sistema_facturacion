@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\PagoService;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ComprobanteCompra;
+use App\Models\ComprobanteVenta;
+use App\Models\PagoAbono;
 use Exception;
 
 class PagoController extends Controller
@@ -33,8 +37,15 @@ class PagoController extends Controller
             'monto.min' => 'El monto debe ser mayor a 0.',
         ]);
 
+        $compra = ComprobanteCompra::findOrFail($validated['comprobante_compra_id']);
+        $user = Auth::user();
+
+        if ($user && !$user->isSuperAdmin() && !$user->empresas()->where('empresas.id', $compra->empresa_id)->exists()) {
+            return back()->with('error', 'No tiene permisos para registrar pagos en esta empresa.');
+        }
+
         try {
-            $this->pagoService->registrarAbonoCompra($validated['comprobante_compra_id'], $validated);
+            $this->pagoService->registrarAbonoCompra($compra->id, $validated, $user->id ?? 1);
             return back()->with('success', '¡Pago / Adelanto registrado correctamente!');
         } catch (Exception $e) {
             return back()->with('error', $e->getMessage());
@@ -59,8 +70,15 @@ class PagoController extends Controller
             'monto.min' => 'El monto debe ser mayor a 0.',
         ]);
 
+        $venta = ComprobanteVenta::findOrFail($validated['comprobante_venta_id']);
+        $user = Auth::user();
+
+        if ($user && !$user->isSuperAdmin() && !$user->empresas()->where('empresas.id', $venta->empresa_id)->exists()) {
+            return back()->with('error', 'No tiene permisos para registrar cobros en esta empresa.');
+        }
+
         try {
-            $this->pagoService->registrarAbonoVenta($validated['comprobante_venta_id'], $validated);
+            $this->pagoService->registrarAbonoVenta($venta->id, $validated, $user->id ?? 1);
             return back()->with('success', '¡Cobro / Adelanto de cliente registrado correctamente!');
         } catch (Exception $e) {
             return back()->with('error', $e->getMessage());
@@ -72,6 +90,14 @@ class PagoController extends Controller
      */
     public function destroy($id)
     {
+        $pago = PagoAbono::with(['comprobanteCompra', 'comprobanteVenta'])->findOrFail($id);
+        $empresaId = $pago->comprobanteCompra->empresa_id ?? $pago->comprobanteVenta->empresa_id ?? null;
+        $user = Auth::user();
+
+        if ($user && $empresaId && !$user->isSuperAdmin() && !$user->empresas()->where('empresas.id', $empresaId)->exists()) {
+            return back()->with('error', 'No tiene permisos para anular este abono.');
+        }
+
         try {
             $this->pagoService->eliminarAbono($id);
             return back()->with('success', 'Abono eliminado y saldo recalculado correctamente.');

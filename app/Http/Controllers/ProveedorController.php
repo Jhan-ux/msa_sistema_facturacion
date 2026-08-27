@@ -26,6 +26,7 @@ class ProveedorController extends Controller
      */
     public function index(Request $request)
     {
+        $user = Auth::user();
         $empresaId = session('active_empresa_id');
         $sedeId = session('active_sede_id');
 
@@ -33,9 +34,17 @@ class ProveedorController extends Controller
 
         if ($empresaId) {
             $query->where('empresa_id', $empresaId);
+        } elseif ($user && !$user->isSuperAdmin()) {
+            $query->whereIn('empresa_id', $user->empresas()->pluck('empresas.id'));
         }
+
         if ($sedeId) {
             $query->where('sede_id', $sedeId);
+        } elseif ($user && !$user->isSuperAdmin()) {
+            $sedesPermitidas = $user->sedes()->pluck('sedes.id');
+            if ($sedesPermitidas->isNotEmpty()) {
+                $query->whereIn('sede_id', $sedesPermitidas);
+            }
         }
 
         // Filtro por estado
@@ -89,11 +98,18 @@ class ProveedorController extends Controller
      */
     public function create()
     {
+        $user = Auth::user();
         $empresaId = session('active_empresa_id');
         $sedeId = session('active_sede_id');
 
-        $empresas = Empresa::where('activo', true)->get();
-        $sedes = Sede::where('activo', true)->when($empresaId, fn($q) => $q->where('empresa_id', $empresaId))->get();
+        $empresas = $user && $user->isSuperAdmin()
+            ? Empresa::where('activo', true)->get()
+            : $user->empresas()->where('activo', true)->get();
+
+        $sedes = $user && $user->isSuperAdmin()
+            ? Sede::where('activo', true)->when($empresaId, fn($q) => $q->where('empresa_id', $empresaId))->get()
+            : $user->sedes()->where('activo', true)->when($empresaId, fn($q) => $q->where('empresa_id', $empresaId))->get();
+
         $areas = Area::where('activo', true)->get();
 
         return view('proveedores.create', compact('empresas', 'sedes', 'areas', 'empresaId', 'sedeId'));
@@ -116,24 +132,43 @@ class ProveedorController extends Controller
             'serie_correlativo' => 'required|string|max:50',
             'area_id' => 'required|exists:areas,id',
             'fecha_emision' => 'required|date',
-            'fecha_vencimiento' => 'required|date',
+            'fecha_vencimiento' => 'required|date|after_or_equal:fecha_emision',
             'moneda' => 'required|in:PEN,USD',
             'monto_total' => 'required|numeric|min:0.01',
             'descripcion' => 'nullable|string',
             // Adelanto inicial opcional
             'tiene_adelanto' => 'nullable|boolean',
-            'monto_adelanto' => 'nullable|numeric|min:0',
-            'metodo_pago' => 'nullable|string',
+            'monto_adelanto' => 'nullable|required_if:tiene_adelanto,1,true|numeric|min:0.01',
+            'metodo_pago' => 'nullable|required_if:tiene_adelanto,1,true|string|in:TRANSFERENCIA,EFECTIVO,YAPE,PLIN,DEPOSITO,CHEQUE,TARJETA,OTRO',
             'nro_operacion' => 'nullable|string|max:100',
             'banco' => 'nullable|string|max:100',
         ], [
             'ruc.size' => 'El RUC debe tener exactamente 11 dígitos.',
             'razon_social.required' => 'La Razón Social del proveedor es obligatoria.',
             'serie_correlativo.required' => 'Ingrese el número de serie y correlativo del comprobante.',
+            'fecha_vencimiento.after_or_equal' => 'La fecha de vencimiento no puede ser anterior a la fecha de emisión.',
             'monto_total.min' => 'El monto total debe ser mayor a 0.',
+            'monto_adelanto.required_if' => 'Debe ingresar el monto del adelanto si la opción está activada.',
+            'monto_adelanto.min' => 'El monto del adelanto debe ser mayor a 0.',
+            'metodo_pago.required_if' => 'Seleccione el método de pago del adelanto.',
         ]);
 
-        return DB::transaction(function () use ($validated, $request) {
+        $user = Auth::user();
+        if (!$user->isSuperAdmin() && !$user->empresas()->where('empresas.id', $validated['empresa_id'])->exists()) {
+            return back()->withErrors(['empresa_id' => 'No tiene autorización para registrar comprobantes en esta empresa.'])->withInput();
+        }
+
+        // Validar que la sede pertenezca a la empresa
+        $sedeValida = Sede::where('id', $validated['sede_id'])->where('empresa_id', $validated['empresa_id'])->exists();
+        if (!$sedeValida) {
+            return back()->withErrors(['sede_id' => 'La sede seleccionada no pertenece a la empresa indicada.'])->withInput();
+        }
+
+        if (!$user->isSuperAdmin() && !$user->sedes()->where('sedes.id', $validated['sede_id'])->exists()) {
+            return back()->withErrors(['sede_id' => 'No tiene permisos para registrar comprobantes en esta sede.'])->withInput();
+        }
+
+        return DB::transaction(function () use ($validated, $request, $user) {
             // 1. Crear o actualizar Proveedor
             $proveedor = Proveedor::updateOrCreate(
                 ['ruc' => $validated['ruc']],
@@ -144,6 +179,16 @@ class ProveedorController extends Controller
                     'correo' => $validated['correo'] ?? null,
                 ]
             );
+
+            // Validar comprobante duplicado para este proveedor en esta empresa
+            $existeDuplicado = ComprobanteCompra::where('empresa_id', $validated['empresa_id'])
+                ->where('proveedor_id', $proveedor->id)
+                ->where('tipo_comprobante', $validated['tipo_comprobante'])
+                ->where('serie_correlativo', strtoupper($validated['serie_correlativo']))
+                ->exists();
+            if ($existeDuplicado) {
+                return back()->withErrors(['serie_correlativo' => 'Ya existe un comprobante con este Tipo y Serie/Correlativo para este Proveedor y Empresa.'])->withInput();
+            }
 
             $montoTotal = floatval($validated['monto_total']);
             $montoAdelanto = $request->boolean('tiene_adelanto') ? floatval($validated['monto_adelanto'] ?? 0) : 0;
@@ -176,7 +221,7 @@ class ProveedorController extends Controller
                 'saldo_pendiente' => $saldo,
                 'estado_pago' => $estado,
                 'descripcion' => $validated['descripcion'] ?? null,
-                'user_id' => Auth::id() ?? 1,
+                'user_id' => $user->id,
             ]);
 
             // 3. Registrar primer adelanto si se indicó
@@ -188,7 +233,7 @@ class ProveedorController extends Controller
                     'nro_operacion' => $validated['nro_operacion'] ?? null,
                     'banco' => $validated['banco'] ?? null,
                     'observacion' => 'Adelanto registrado al ingresar la factura',
-                ]);
+                ], $user->id);
             }
 
             return redirect()->route('proveedores.index')->with('success', '¡Factura de proveedor registrada exitosamente!');
@@ -201,6 +246,14 @@ class ProveedorController extends Controller
     public function show($id)
     {
         $compra = ComprobanteCompra::with(['proveedor', 'empresa', 'sede', 'area', 'pagos.user'])->findOrFail($id);
+
+        $user = Auth::user();
+        if ($user && !$user->isSuperAdmin() && !$user->empresas()->where('empresas.id', $compra->empresa_id)->exists()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tiene permisos para consultar este comprobante.'
+            ], 403);
+        }
 
         return response()->json([
             'success' => true,
@@ -217,6 +270,12 @@ class ProveedorController extends Controller
     public function destroy($id)
     {
         $compra = ComprobanteCompra::findOrFail($id);
+
+        $user = Auth::user();
+        if ($user && !$user->isSuperAdmin() && !$user->empresas()->where('empresas.id', $compra->empresa_id)->exists()) {
+            return redirect()->route('proveedores.index')->with('error', 'No tiene permisos para eliminar este comprobante.');
+        }
+
         $compra->delete();
 
         return redirect()->route('proveedores.index')->with('success', 'Comprobante eliminado correctamente.');

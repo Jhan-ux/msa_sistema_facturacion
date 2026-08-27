@@ -56,6 +56,16 @@ function filtrarSedesPorEmpresa() {
     if (primeraSede) selectSede.value = primeraSede;
 }
 
+function escapeHtml(text) {
+    if (!text) return '';
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 function buscarClienteSunatReniec() {
     const tipo = document.getElementById('selectTipoDoc').value;
     const doc = document.getElementById('inputNumDoc').value.trim();
@@ -75,7 +85,7 @@ function buscarClienteSunatReniec() {
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> Consultando...';
     mensaje.innerHTML = '<span class="text-muted">Consultando padrón oficial...</span>';
 
-    const endpoint = tipo === 'RUC' ? `/api/sunat/ruc/${doc}` : `/api/sunat/dni/${doc}`;
+    const endpoint = tipo === 'RUC' ? `/api/sunat/ruc/${encodeURIComponent(doc)}` : `/api/sunat/dni/${encodeURIComponent(doc)}`;
 
     fetch(endpoint)
         .then(res => res.json())
@@ -89,7 +99,7 @@ function buscarClienteSunatReniec() {
                 document.getElementById('inputRazonSocial').value = nombre;
                 if (d.direccion) document.getElementById('inputDireccion').value = d.direccion;
 
-                mensaje.innerHTML = `<span class="text-success"><i class="fa-solid fa-circle-check"></i> Encontrado: ${nombre}</span>`;
+                mensaje.innerHTML = `<span class="text-success"><i class="fa-solid fa-circle-check"></i> Encontrado: ${escapeHtml(nombre)}</span>`;
                 Swal.fire({
                     icon: 'success',
                     title: 'Cliente Encontrado',
@@ -98,7 +108,7 @@ function buscarClienteSunatReniec() {
                     showConfirmButton: false
                 });
             } else {
-                mensaje.innerHTML = `<span class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> ${data.message || 'No se encontraron datos automáticos.'}</span>`;
+                mensaje.innerHTML = `<span class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> ${escapeHtml(data.message || 'No se encontraron datos automáticos.')}</span>`;
             }
         })
         .catch(err => {

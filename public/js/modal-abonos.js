@@ -78,6 +78,16 @@ function abrirModalAbonosVenta(id) {
         });
 }
 
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 function renderizarListaPagos(pagos, simbolo) {
     const tbody = document.getElementById('listaHistorialAbonos');
     const badge = document.getElementById('modalTotalAbonosBadge');
@@ -92,16 +102,23 @@ function renderizarListaPagos(pagos, simbolo) {
     const csrfToken = document.querySelector('meta[name="csrf-token"]') ? document.querySelector('meta[name="csrf-token"]').getAttribute('content') : '';
 
     pagos.forEach(p => {
+        const fechaSafe = escapeHtml(p.fecha_pago);
+        const metodoSafe = escapeHtml(p.metodo_pago);
+        const opSafe = p.nro_operacion ? escapeHtml(p.nro_operacion) : '-';
+        const bancoSafe = p.banco ? ` (${escapeHtml(p.banco)})` : '';
+        const obsSafe = p.observacion ? escapeHtml(p.observacion) : '-';
+        const pagoId = parseInt(p.id, 10);
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td class="small fw-semibold">${p.fecha_pago}</td>
-            <td class="fw-bold text-success">${simbolo} ${parseFloat(p.monto).toFixed(2)}</td>
-            <td><span class="badge bg-light text-dark border">${p.metodo_pago}</span></td>
-            <td class="small">${p.nro_operacion ? p.nro_operacion : '-'} ${p.banco ? `(${p.banco})` : ''}</td>
-            <td class="small text-muted">${p.observacion ? p.observacion : '-'}</td>
+            <td class="small fw-semibold">${fechaSafe}</td>
+            <td class="fw-bold text-success">${escapeHtml(simbolo)} ${parseFloat(p.monto).toFixed(2)}</td>
+            <td><span class="badge bg-light text-dark border">${metodoSafe}</span></td>
+            <td class="small">${opSafe}${bancoSafe}</td>
+            <td class="small text-muted">${obsSafe}</td>
             <td class="text-center">
-                <form action="/pagos/${p.id}" method="POST" onsubmit="return confirm('¿Seguro que deseas anular este abono? El saldo del comprobante se recalculará automáticamente.')">
-                    <input type="hidden" name="_token" value="${csrfToken}">
+                <form action="/pagos/${pagoId}" method="POST" onsubmit="return confirm('¿Seguro que deseas anular este abono? El saldo del comprobante se recalculará automáticamente.')">
+                    <input type="hidden" name="_token" value="${escapeHtml(csrfToken)}">
                     <input type="hidden" name="_method" value="DELETE">
                     <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" title="Eliminar abono">
                         <i class="fa-solid fa-trash-can"></i>
