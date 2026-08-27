@@ -1,0 +1,282 @@
+:root {
+    --msa-primary: #1e3a8a;
+    --msa-primary-dark: #0f172a;
+    --msa-accent: #3b82f6;
+    --msa-bg: #f8fafc;
+    --msa-card-bg: #ffffff;
+    --msa-border: #e2e8f0;
+    --msa-text: #1e293b;
+    --msa-text-muted: #64748b;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--msa-bg);
+    color: var(--msa-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+    color: #fff;
+    min-height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+}
+
+.sidebar-brand {
+    padding: 1.5rem 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: #fff;
+}
+
+.sidebar-brand .brand-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.sidebar-menu {
+    padding: 1rem 0;
+    list-style: none;
+    margin: 0;
+}
+
+.sidebar-item {
+    margin: 0.25rem 0.75rem;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: #94a3b8;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.sidebar-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-link.active {
+    color: #fff;
+    background: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+}
+
+.sidebar-heading {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    padding: 0.75rem 1.75rem 0.25rem;
+    font-weight: 700;
+}
+
+/* Sidebar Backdrop for Mobile */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 1040;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-backdrop.show {
+    display: block;
+    opacity: 1;
+}
+
+/* Main Content Wrapper */
+.main-wrapper {
+    margin-left: 260px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease;
+}
+
+/* Top Navbar */
+.top-navbar {
+    background: #fff;
+    border-bottom: 1px solid var(--msa-border);
+    padding: 0.75rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+/* Content Container */
+.content-body {
+    padding: 1.5rem;
+    flex: 1;
+}
+
+/* Card Styles */
+.msa-card {
+    background: var(--msa-card-bg);
+    border: 1px solid var(--msa-border);
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.msa-card-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--msa-border);
+    background: transparent;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.msa-card-body {
+    padding: 1.5rem;
+}
+
+/* KPI Stat Cards */
+.stat-card {
+    border-radius: 12px;
+    padding: 1.25rem;
+    background: #fff;
+    border: 1px solid var(--msa-border);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card .icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+/* Semáforos de Vencimiento */
+.badge-semaforo-verde {
+    background-color: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+    font-weight: 600;
+}
+
+.badge-semaforo-amarillo {
+    background-color: #fef9c3;
+    color: #a16207;
+    border: 1px solid #fef08a;
+    font-weight: 600;
+}
+
+.badge-semaforo-naranja {
+    background-color: #ffedd5;
+    color: #c2410c;
+    border: 1px solid #fed7aa;
+    font-weight: 600;
+}
+
+.badge-semaforo-rojo {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    font-weight: 700;
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+/* =========================================================
+   ADAPTACIÓN RESPONSIVE MOBILE & TABLET
+   ========================================================= */
+@media (max-width: 991.98px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .main-wrapper {
+        margin-left: 0;
+    }
+
+    .top-navbar {
+        padding: 0.75rem 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .content-body {
+        padding: 1rem;
+    }
+
+    .msa-card-header {
+        padding: 1rem 1.25rem;
+    }
+
+    .msa-card-body {
+        padding: 1.25rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .content-body {
+        padding: 0.75rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .msa-card-body {
+        padding: 1rem;
+    }
+
+    .table-responsive {
+        border-radius: 8px;
+    }
+}
