@@ -1,59 +1,92 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏢📊 MSA - Sistema de Facturación y Control Contable Corporativo
+> **Sistema integral de gestión de facturación, cuentas por pagar (CxP), cuentas por cobrar (CxC), amortizaciones y alertas de vencimiento con arquitectura Multi-Empresa y Multi-Sede.**
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+---
 
-## About Laravel
+## 🌟 Características Principales
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **🏛️ Arquitectura Multi-Empresa & Multi-Sede:** Permite administrar múltiples razones sociales (empresas) y sucursales (sedes) de forma centralizada o aislada con selector de contexto en tiempo real.
+- **📊 Tablero de Control Financiero (Dashboard):** Indicadores en tiempo real de saldos pendientes en Soles (PEN) y Dólares (USD), semáforos de vencimiento y distribución de gastos/ingresos por áreas operativas (*Taller, Repuestos, Ventas, Cigüeñal, Administración*).
+- **💸 Cuentas por Pagar (Proveedores - CxP):** Control minucioso de compras, facturas, boletas, fechas de vencimiento, estados de pago (*Pendiente, Con Adelanto, Pagado, Vencido*) y registro de amortizaciones/vouchers.
+- **💳 Cuentas por Cobrar (Clientes - CxC):** Registro de ventas, control de cobranzas, historial de abonos y generación de enlaces de cobro con formato para **WhatsApp** con cuentas bancarias configuradas por empresa.
+- **🟢🟡🔴 Motor de Semáforos de Vencimiento:** Alertas inteligentes con código de color según días restantes o días de mora para priorizar pagos y cobranzas urgentes.
+- **🔍 Integración de Consultas SUNAT & RENIEC:** Búsqueda asíncrona de datos de RUC y DNI (Razón Social, Dirección, Estado y Condición Habido).
+- **👤 Módulo de Mi Perfil & Seguridad:** Panel de usuario para consultar datos personales, empresas/sedes asignadas y actualización segura de contraseña.
+- **📑 Reportes y Exportación:** Generación y exportación de estados de cuenta y listas en Excel, PDF y vistas optimizadas para impresión.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🛠️ Stack Tecnológico
 
-## Learning Laravel
+- **Backend:** [Laravel 11](https://laravel.com/) (PHP 8.2+)
+- **Base de Datos:** MySQL / MariaDB con Eloquent ORM y migraciones estructuradas
+- **Frontend & UI:** Blade Templates, Bootstrap 5.3, FontAwesome 6, SweetAlert2
+- **DataTables:** DataTables.js con filtros avanzados, búsqueda instantánea y botones de exportación
+- **Bundler:** Vite
+- **Integraciones:** API REST para consultas SUNAT / RENIEC y servicio de WhatsApp
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🚀 Guía de Instalación y Puesta en Marcha
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
+### 1. Clonar el Repositorio
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/Jhan-ux/msa_sistema_facturacion.git
+cd msa_sistema_facturacion
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Instalar Dependencias de PHP y JavaScript
+```bash
+composer install
+npm install
+```
 
-## Contributing
+### 3. Configurar el Entorno (.env)
+Copiar el archivo de ejemplo y configurar las credenciales de base de datos:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+En tu archivo `.env`, verifica los datos de conexión a MySQL:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=msa_sistema_facturacion
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## Code of Conduct
+### 4. Ejecutar Migraciones y Seeders (Datos de Prueba)
+```bash
+php artisan migrate --seed
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 5. Iniciar los Servidores de Desarrollo
+En terminales separadas ejecuta:
+```bash
+# Servidor Web Laravel
+php artisan serve
 
-## Security Vulnerabilities
+# Compilador de Assets Frontend (Vite)
+npm run dev
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Acceder al sistema en tu navegador: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
+---
 
+## 🔑 Credenciales de Acceso por Defecto
+
+El seeder inicial crea usuarios con roles preconfigurados:
+
+| Usuario | Contraseña | Rol | Acceso |
+| :--- | :--- | :--- | :--- |
+| **`admin`** | `admin123` | **SUPERADMIN** | Acceso global irrestricto a todas las Empresas y Sedes |
+| **`contador`** | `contador123` | **CONTADOR** | Acceso a operaciones contables, CxP, CxC y Reportes |
+
+---
 
 ## 📁 Estructura del Proyecto
 
@@ -61,56 +94,59 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 msa_sistema_facturacion/
 ├── app/
 │   ├── Http/
-│   │   ├── Controllers/          # Controladores (Auth, Clientes, Proveedores, Pagos, Reportes, Dashboard, Sunat)
-│   │   └── Middleware/           # Middlewares personalizados (ej. SetActiveEmpresaSede)
-│   ├── Models/                   # Modelos Eloquent (Empresa, Sede, Cliente, Proveedor, Comprobantes, Pagos, etc.)
-│   ├── Providers/                # Service Providers de la aplicación
+│   │   ├── Controllers/          # Controladores (Auth, Clientes, Proveedores, Pagos, Reportes, Dashboard, Sunat, Profile)
+│   │   └── Middleware/           # Middlewares (ej. SetActiveEmpresaSede)
+│   ├── Models/                   # Modelos Eloquent (Empresa, Sede, Cliente, Proveedor, Comprobantes, Pagos, User, Area)
+│   ├── Providers/                # Service Providers de Laravel
 │   └── Services/                 # Capa de servicios (DashboardService, PagoService, SunatService, WhatsAppService)
-├── bootstrap/                    # Configuración de arranque de Laravel
+├── bootstrap/                    # Configuración de arranque de la aplicación
 ├── config/                       # Archivos de configuración (app, auth, database, services, etc.)
 ├── database/
-│   ├── factories/                # Fábricas de modelos
-│   ├── migrations/               # Migraciones de base de datos (Estructura Multi-empresa y Multi-sede)
-│   └── seeders/                  # Seeders con datos iniciales
-├── documentacion/                # Especificación técnica, arquitectura, diseño y guías del sistema
+│   ├── factories/                # Fábricas de modelos para testing
+│   ├── migrations/               # Migraciones (Arquitectura Multi-empresa y Multi-sede)
+│   └── seeders/                  # Seeders con datos iniciales corporativos
+├── documentacion/                # Documentación exhaustiva sobre arquitectura, requerimientos y modelo SQL
 │   ├── 01_REQUERIMIENTOS_Y_ALCANCE.md
 │   ├── 02_ARQUITECTURA_Y_DISENO_TECNICO.md
 │   ├── 03_MODELO_DE_DATOS_Y_SQL.md
 │   ├── 04_MODULOS_Y_PANTALLAS.md
 │   ├── 05_INTEGRACIONES_Y_ALERTAS.md
 │   └── README.md
-├── public/                       # Punto de entrada web y recursos públicos (CSS, JS, favicon)
+├── public/                       # Assets públicos compilados (CSS, JS, favicon)
 │   ├── css/                      # Estilos personalizados (app.css, auth.css)
-│   └── js/                       # Scripts del frontend (app.js, auth.js, clientes.js, modal-abonos.js, etc.)
+│   └── js/                       # Scripts del frontend (app.js, auth.js, clientes.js, modal-abonos.js, proveedores.js)
 ├── resources/
 │   ├── css/                      # Estilos fuentes
 │   ├── js/                       # JavaScript fuente
-│   └── views/                    # Vistas Blade del sistema
+│   └── views/                    # Vistas Blade modulares
 │       ├── auth/                 # Login y autenticación
-│       ├── clientes/             # Vistas de gestión de clientes
-│       ├── components/           # Componentes Blade reutilizables (ej. modal_abonos)
-│       ├── dashboard/            # Panel principal con KPIs e indicadores
+│       ├── clientes/             # Vistas de Cuentas por Cobrar (CxC)
+│       ├── components/           # Componentes Blade reutilizables (modal_abonos)
+│       ├── dashboard/            # Panel principal con KPIs y alertas
 │       ├── layouts/              # Plantillas base (app, navbar, sidebar)
-│       ├── proveedores/          # Vistas de gestión de proveedores
-│       └── reportes/             # Reportes de cuentas por cobrar y por pagar
+│       ├── perfil/               # Panel de Mi Perfil & Seguridad de contraseña
+│       ├── proveedores/          # Vistas de Cuentas por Pagar (CxP)
+│       └── reportes/             # Reportes analíticos de CxP y CxC
 ├── routes/
-│   ├── console.php               # Comandos de consola
-│   └── web.php                   # Definición de rutas web y endpoints de la aplicación
-├── storage/                      # Almacenamiento local, logs y caché del framework
-├── tests/                        # Pruebas automatizadas (Feature y Unit)
-├── .env.example                  # Plantilla de variables de entorno
-├── composer.json                 # Dependencias PHP (Laravel Framework)
-├── package.json                  # Dependencias de frontend y scripts de compilación
-└── vite.config.js                # Configuración del bundler Vite
+│   ├── console.php               # Comandos de consola Artisan
+│   └── web.php                   # Rutas web del sistema y endpoints
+├── storage/                      # Almacenamiento local, logs y caché
+└── tests/                        # Pruebas automatizadas (Unit y Feature)
 ```
 
-### 📋 Descripción de Módulos Principales
+---
 
-| Módulo / Directorio | Descripción |
-| :--- | :--- |
-| **`app/Services/`** | Lógica de negocio desacoplada: consultas SUNAT (RUC/DNI), lógica financiera de pagos/abonos, métricas del dashboard y notificaciones por WhatsApp. |
-| **`app/Http/Controllers/`** | Controladores que orquestan las peticiones HTTP, validaciones y respuestas (JSON/Blade). |
-| **`app/Models/`** | Modelos relacionales con soporte para arquitectura Multi-Empresa y Multi-Sede. |
-| **`database/migrations/`** | Esquema relacional optimizado para facturación, compras, ventas y amortizaciones. |
-| **`resources/views/`** | Interfaz de usuario construida con Blade y diseño modular responsivo. |
-| **`documentacion/`** | Documentación exhaustiva sobre arquitectura, requerimientos, modelo SQL e integraciones. |
+## 📚 Documentación Técnica Detallada
+
+Para más información sobre la arquitectura y diseño técnico, consulta la carpeta [`documentacion/`](file:///c:/xampp/htdocs/msa_sistema_facturacion/documentacion):
+- 📘 [01. Requerimientos y Alcance Funcional](file:///c:/xampp/htdocs/msa_sistema_facturacion/documentacion/01_REQUERIMIENTOS_Y_ALCANCE.md)
+- 🏗️ [02. Arquitectura y Diseño Técnico](file:///c:/xampp/htdocs/msa_sistema_facturacion/documentacion/02_ARQUITECTURA_Y_DISENO_TECNICO.md)
+- 🗄️ [03. Modelo de Datos y Script SQL DDL](file:///c:/xampp/htdocs/msa_sistema_facturacion/documentacion/03_MODELO_DE_DATOS_Y_SQL.md)
+- 🖥️ [04. Módulos y Pantallas del Sistema](file:///c:/xampp/htdocs/msa_sistema_facturacion/documentacion/04_MODULOS_Y_PANTALLAS.md)
+- 🔔 [05. Integraciones SUNAT, WhatsApp y Motor de Alertas](file:///c:/xampp/htdocs/msa_sistema_facturacion/documentacion/05_INTEGRACIONES_Y_ALERTAS.md)
+
+---
+
+## 📄 Licencia
+
+Este proyecto es software de código abierto licenciado bajo la [Licencia MIT](https://opensource.org/licenses/MIT).

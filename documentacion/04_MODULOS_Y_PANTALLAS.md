@@ -114,3 +114,31 @@ Permite auditar las cuentas por pagar filtradas por Empresa y Sede.
    - Creación de sedes asociadas a cada empresa con dirección y responsable.
 3. **Asignación de Usuarios**:
    - Matriz de permisos para asignar a qué empresas y sedes tiene acceso cada usuario.
+
+---
+
+## 6. Módulo de Mi Perfil & Seguridad de Usuario
+
+Permite a los usuarios autenticados consultar sus datos en el sistema, actualizar su información personal y gestionar el cambio de su contraseña de forma segura.
+
+### 6.1 Funcionalidades y Pantalla de Perfil:
+1. **Puntos de Acceso:**
+   - Botón directo **"Mi Perfil"** en la barra superior del Dashboard junto a las acciones principales.
+   - Opción **"Mi Perfil & Seguridad"** en el menú desplegable del Navbar superior.
+   - Acceso permanente en la sección **"Cuenta & Configuración"** del Sidebar lateral.
+
+2. **Tarjeta de Identidad y Accesos:**
+   - Visualización de avatar con iniciales dinámicas.
+   - Datos generales: Nombre, Usuario (`@username`), Correo electrónico, Rol (`SUPERADMIN`, `ADMIN_EMPRESA`, `CONTADOR`, `ASISTENTE`) y estado activo.
+   - Resumen de **Empresas y Sedes** asignadas con acceso autorizado.
+   - Registro de fecha de creación y tiempo de última actualización.
+
+3. **Edición de Información Personal:**
+   - Formulario para actualizar: Nombre Completo, Nombre de Usuario y Correo Electrónico.
+   - Validaciones de unicidad y formato seguro.
+
+4. **Seguridad y Cambio de Contraseña:**
+   - Verificación obligatoria de contraseña actual mediante encriptación `Bcrypt` / `Argon2`.
+   - Ingreso de nueva contraseña (mínimo 6 caracteres) con campo de confirmación.
+   - Validación visual interactiva en tiempo real sobre coincidencia de contraseñas.
+   - Botones conmutadores (icono de ojo) para alternar visibilidad de campos de texto/password.

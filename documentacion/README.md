@@ -51,6 +51,7 @@ graph TD
    - Selector doble en Navbar: `[ Empresa: MSA Repuestos ▾ ]` y `[ Sede: Principal ▾ ]`.
    - Dashboard financiero Corporativo (Consolidado de todas las empresas) y Dashboard por Empresa/Sede.
    - Modales de registro con consulta SUNAT, historial de abonos y semáforos de alerta.
+   - Módulo de **Mi Perfil & Seguridad** (Gestión de datos de usuario y cambio de contraseña).
 
 5. **[05_INTEGRACIONES_Y_ALERTAS.md](file:///c:/xampp/htdocs/msa_sistema_facturacion/documentacion/05_INTEGRACIONES_Y_ALERTAS.md)**
    - Servicio `SunatService.php` para consulta oficial de RUC y DNI.
