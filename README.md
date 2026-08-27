@@ -53,6 +53,64 @@ In order to ensure that the Laravel community is welcoming to all, please review
 
 If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## 📁 Estructura del Proyecto
+
+```text
+msa_sistema_facturacion/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/          # Controladores (Auth, Clientes, Proveedores, Pagos, Reportes, Dashboard, Sunat)
+│   │   └── Middleware/           # Middlewares personalizados (ej. SetActiveEmpresaSede)
+│   ├── Models/                   # Modelos Eloquent (Empresa, Sede, Cliente, Proveedor, Comprobantes, Pagos, etc.)
+│   ├── Providers/                # Service Providers de la aplicación
+│   └── Services/                 # Capa de servicios (DashboardService, PagoService, SunatService, WhatsAppService)
+├── bootstrap/                    # Configuración de arranque de Laravel
+├── config/                       # Archivos de configuración (app, auth, database, services, etc.)
+├── database/
+│   ├── factories/                # Fábricas de modelos
+│   ├── migrations/               # Migraciones de base de datos (Estructura Multi-empresa y Multi-sede)
+│   └── seeders/                  # Seeders con datos iniciales
+├── documentacion/                # Especificación técnica, arquitectura, diseño y guías del sistema
+│   ├── 01_REQUERIMIENTOS_Y_ALCANCE.md
+│   ├── 02_ARQUITECTURA_Y_DISENO_TECNICO.md
+│   ├── 03_MODELO_DE_DATOS_Y_SQL.md
+│   ├── 04_MODULOS_Y_PANTALLAS.md
+│   ├── 05_INTEGRACIONES_Y_ALERTAS.md
+│   └── README.md
+├── public/                       # Punto de entrada web y recursos públicos (CSS, JS, favicon)
+│   ├── css/                      # Estilos personalizados (app.css, auth.css)
+│   └── js/                       # Scripts del frontend (app.js, auth.js, clientes.js, modal-abonos.js, etc.)
+├── resources/
+│   ├── css/                      # Estilos fuentes
+│   ├── js/                       # JavaScript fuente
+│   └── views/                    # Vistas Blade del sistema
+│       ├── auth/                 # Login y autenticación
+│       ├── clientes/             # Vistas de gestión de clientes
+│       ├── components/           # Componentes Blade reutilizables (ej. modal_abonos)
+│       ├── dashboard/            # Panel principal con KPIs e indicadores
+│       ├── layouts/              # Plantillas base (app, navbar, sidebar)
+│       ├── proveedores/          # Vistas de gestión de proveedores
+│       └── reportes/             # Reportes de cuentas por cobrar y por pagar
+├── routes/
+│   ├── console.php               # Comandos de consola
+│   └── web.php                   # Definición de rutas web y endpoints de la aplicación
+├── storage/                      # Almacenamiento local, logs y caché del framework
+├── tests/                        # Pruebas automatizadas (Feature y Unit)
+├── .env.example                  # Plantilla de variables de entorno
+├── composer.json                 # Dependencias PHP (Laravel Framework)
+├── package.json                  # Dependencias de frontend y scripts de compilación
+└── vite.config.js                # Configuración del bundler Vite
+```
+
+### 📋 Descripción de Módulos Principales
+
+| Módulo / Directorio | Descripción |
+| :--- | :--- |
+| **`app/Services/`** | Lógica de negocio desacoplada: consultas SUNAT (RUC/DNI), lógica financiera de pagos/abonos, métricas del dashboard y notificaciones por WhatsApp. |
+| **`app/Http/Controllers/`** | Controladores que orquestan las peticiones HTTP, validaciones y respuestas (JSON/Blade). |
+| **`app/Models/`** | Modelos relacionales con soporte para arquitectura Multi-Empresa y Multi-Sede. |
+| **`database/migrations/`** | Esquema relacional optimizado para facturación, compras, ventas y amortizaciones. |
+| **`resources/views/`** | Interfaz de usuario construida con Blade y diseño modular responsivo. |
+| **`documentacion/`** | Documentación exhaustiva sobre arquitectura, requerimientos, modelo SQL e integraciones. |
