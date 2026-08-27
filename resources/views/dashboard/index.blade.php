@@ -18,7 +18,10 @@
             @endif
         </p>
     </div>
-    <div class="d-flex gap-2">
+    <div class="d-flex flex-wrap align-items-center gap-2">
+        <a href="{{ route('perfil.show') }}" class="btn btn-sm btn-outline-dark">
+            <i class="fa-solid fa-user-gear me-1 text-primary"></i> Mi Perfil
+        </a>
         <a href="{{ route('proveedores.create') }}" class="btn btn-sm btn-outline-primary">
             <i class="fa-solid fa-plus me-1"></i> Factura Compra
         </a>

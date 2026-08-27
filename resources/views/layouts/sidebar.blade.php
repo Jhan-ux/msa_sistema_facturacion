@@ -59,5 +59,13 @@
                 <span>Reporte Clientes</span>
             </a>
         </li>
+
+        <li class="sidebar-heading">Cuenta & Configuración</li>
+        <li class="sidebar-item">
+            <a href="{{ route('perfil.show') }}" class="sidebar-link {{ request()->routeIs('perfil.show') ? 'active' : '' }}">
+                <i class="fa-solid fa-user-gear text-info"></i>
+                <span>Mi Perfil & Seguridad</span>
+            </a>
+        </li>
     </ul>
 </aside>

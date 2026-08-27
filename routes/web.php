@@ -9,6 +9,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\SunatApiController;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,9 +35,16 @@ Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-// Rutas del Sistema (Dashboard, CxP, CxC, Pagos, Reportes)
+// Rutas del Sistema (Dashboard, Perfil, CxP, CxC, Pagos, Reportes)
 Route::middleware(['web'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Módulo Perfil de Usuario & Cambio de Contraseña
+    Route::prefix('perfil')->name('perfil.')->group(function () {
+        Route::get('/', [ProfileController::class, 'show'])->name('show');
+        Route::put('/', [ProfileController::class, 'update'])->name('update');
+        Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password');
+    });
 
     // Módulo Proveedores (Cuentas por Pagar)
     Route::prefix('proveedores')->name('proveedores.')->group(function () {
@@ -69,3 +77,4 @@ Route::middleware(['web'])->group(function () {
         Route::get('/cuentas-por-cobrar', [ReporteController::class, 'cuentasPorCobrar'])->name('cxc');
     });
 });
+

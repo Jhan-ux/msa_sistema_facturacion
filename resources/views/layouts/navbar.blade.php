@@ -69,6 +69,11 @@
                         <i class="fa-solid fa-gauge text-muted"></i> Dashboard
                     </a>
                 </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('perfil.show') }}">
+                        <i class="fa-solid fa-user-gear text-primary"></i> Mi Perfil & Seguridad
+                    </a>
+                </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <form action="{{ route('logout') }}" method="POST">
