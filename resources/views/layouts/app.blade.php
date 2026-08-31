@@ -70,6 +70,18 @@
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Global App Configuration for DataTables & Exports -->
+    <script>
+        window.MSA_CONFIG = {
+            empresa: @json($empresaActiva->nombre_comercial ?? $empresaActiva->razon_social ?? 'GRUPO EMPRESARIAL MSA'),
+            ruc: @json($empresaActiva->ruc ?? '20601234567'),
+            sede: @json($sedeActiva->nombre ?? 'Consolidado General'),
+            user: @json(Auth::user()->name ?? 'Usuario Contable'),
+            rol: @json(Auth::user()->rol ?? 'CONTADOR'),
+            fechaHora: @json(\Carbon\Carbon::now()->format('d/m/Y H:i'))
+        };
+    </script>
+
     <!-- Custom Application JS -->
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/modal-abonos.js') }}"></script>

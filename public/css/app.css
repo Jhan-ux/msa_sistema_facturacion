@@ -280,3 +280,178 @@ body {
         border-radius: 8px;
     }
 }
+
+/* =========================================================
+   ESTILOS DE IMPRESIÓN PROFESIONAL Y EJECUTIVA (@media print)
+   ========================================================= */
+@media print {
+    @page {
+        size: landscape;
+        margin: 8mm 8mm 10mm 8mm;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        font-size: 10px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Ocultar elementos no imprimibles */
+    .sidebar,
+    .sidebar-backdrop,
+    .top-navbar,
+    .btn,
+    .btn-group,
+    .btn-close,
+    .modal,
+    .modal-backdrop,
+    .alert,
+    form,
+    .dt-buttons,
+    .dataTables_filter,
+    .dataTables_info,
+    .dataTables_paginate,
+    .dataTables_length,
+    .no-print,
+    .no-export,
+    th.no-export,
+    td.no-export {
+        display: none !important;
+    }
+
+    .main-wrapper {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .content-body {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .msa-card {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin-bottom: 10px !important;
+    }
+
+    .msa-card-header {
+        border-bottom: 2px solid #0f172a !important;
+        padding: 6px 0 !important;
+        font-size: 14px !important;
+        font-weight: 800 !important;
+    }
+
+    .msa-card-body {
+        padding: 8px 0 !important;
+    }
+
+    .stat-card {
+        border: 1px solid #cbd5e1 !important;
+        padding: 8px 10px !important;
+        border-radius: 6px !important;
+        background: #f8fafc !important;
+        page-break-inside: avoid !important;
+    }
+
+    /* Tablas en impresión */
+    table,
+    table.table,
+    table.dataTable {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin-top: 10px !important;
+        font-size: 9.5px !important;
+    }
+
+    table thead th {
+        background-color: #0f172a !important;
+        color: #ffffff !important;
+        border: 1px solid #334155 !important;
+        padding: 6px 5px !important;
+        font-weight: 700 !important;
+        font-size: 9px !important;
+        text-transform: uppercase !important;
+        vertical-align: middle !important;
+    }
+
+    table tbody td {
+        border: 1px solid #e2e8f0 !important;
+        padding: 5px 6px !important;
+        vertical-align: middle !important;
+        color: #1e293b !important;
+        font-size: 9.5px !important;
+    }
+
+    table tbody tr:nth-child(even) td {
+        background-color: #f8fafc !important;
+    }
+
+    table tfoot td {
+        background-color: #f1f5f9 !important;
+        border-top: 2px solid #0f172a !important;
+        border-bottom: 2px solid #0f172a !important;
+        font-weight: 700 !important;
+        font-size: 9.5px !important;
+    }
+
+    /* Badges en impresión */
+    .badge {
+        display: inline-block !important;
+        padding: 2px 5px !important;
+        font-size: 8px !important;
+        font-weight: 700 !important;
+        border-radius: 4px !important;
+        text-transform: uppercase !important;
+    }
+
+    .badge-semaforo-rojo, .badge.bg-danger {
+        background-color: #fee2e2 !important;
+        color: #991b1b !important;
+        border: 1px solid #f87171 !important;
+    }
+
+    .badge-semaforo-amarillo, .badge.bg-warning {
+        background-color: #fef9c3 !important;
+        color: #854d0e !important;
+        border: 1px solid #facc15 !important;
+    }
+
+    .badge-semaforo-verde, .badge.bg-success {
+        background-color: #dcfce7 !important;
+        color: #166534 !important;
+        border: 1px solid #4ade80 !important;
+    }
+
+    .badge.bg-info {
+        background-color: #e0f2fe !important;
+        color: #0369a1 !important;
+        border: 1px solid #7dd3fc !important;
+    }
+
+    .badge.bg-light, .badge.bg-secondary-subtle {
+        background-color: #f1f5f9 !important;
+        color: #334155 !important;
+        border: 1px solid #cbd5e1 !important;
+    }
+
+    .badge.bg-primary, .badge.bg-primary-subtle {
+        background-color: #dbeafe !important;
+        color: #1d4ed8 !important;
+        border: 1px solid #93c5fd !important;
+    }
+
+    tr { page-break-inside: avoid !important; }
+    thead { display: table-header-group !important; }
+    tfoot { display: table-footer-group !important; }
+}
+

@@ -10,6 +10,8 @@ use App\Http\Controllers\PagoController;
 use App\Http\Controllers\SunatApiController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\SedeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +48,29 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/', [ProfileController::class, 'show'])->name('show');
         Route::put('/', [ProfileController::class, 'update'])->name('update');
         Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password');
+    });
+
+    // Módulo Empresas (Administración Multi-Empresa)
+    Route::prefix('empresas')->name('empresas.')->group(function () {
+        Route::get('/', [EmpresaController::class, 'index'])->name('index');
+        Route::get('/crear', [EmpresaController::class, 'create'])->name('create');
+        Route::post('/', [EmpresaController::class, 'store'])->name('store');
+        Route::get('/{id}', [EmpresaController::class, 'show'])->name('show');
+        Route::get('/{id}/editar', [EmpresaController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [EmpresaController::class, 'update'])->name('update');
+        Route::patch('/{id}/toggle-status', [EmpresaController::class, 'toggleStatus'])->name('toggle_status');
+        Route::delete('/{id}', [EmpresaController::class, 'destroy'])->name('destroy');
+    });
+
+    // Módulo Sedes (Administración Multi-Sede)
+    Route::prefix('sedes')->name('sedes.')->group(function () {
+        Route::get('/', [SedeController::class, 'index'])->name('index');
+        Route::get('/crear', [SedeController::class, 'create'])->name('create');
+        Route::post('/', [SedeController::class, 'store'])->name('store');
+        Route::get('/{id}/editar', [SedeController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [SedeController::class, 'update'])->name('update');
+        Route::patch('/{id}/toggle-status', [SedeController::class, 'toggleStatus'])->name('toggle_status');
+        Route::delete('/{id}', [SedeController::class, 'destroy'])->name('destroy');
     });
 
     // Módulo Proveedores (Cuentas por Pagar)

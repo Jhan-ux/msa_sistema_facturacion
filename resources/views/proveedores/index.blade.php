@@ -111,11 +111,31 @@
                     <th class="text-end">Pagado / Adelanto</th>
                     <th class="text-end">Saldo Pendiente</th>
                     <th>Estado</th>
-                    <th class="text-center">Acciones</th>
+                    <th class="text-center no-export">Acciones</th>
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $sumTotalPen = 0;
+                    $sumPagadoPen = 0;
+                    $sumSaldoPen = 0;
+
+                    $sumTotalUsd = 0;
+                    $sumPagadoUsd = 0;
+                    $sumSaldoUsd = 0;
+                @endphp
                 @foreach($comprobantes as $comp)
+                    @php
+                        if ($comp->moneda === 'USD') {
+                            $sumTotalUsd += $comp->monto_total;
+                            $sumPagadoUsd += $comp->monto_pagado;
+                            $sumSaldoUsd += $comp->saldo_pendiente;
+                        } else {
+                            $sumTotalPen += $comp->monto_total;
+                            $sumPagadoPen += $comp->monto_pagado;
+                            $sumSaldoPen += $comp->saldo_pendiente;
+                        }
+                    @endphp
                     <tr>
                         <td>
                             @if($comp->semaforo_color === 'danger')
@@ -175,7 +195,7 @@
                                 <span class="badge bg-warning text-dark"><i class="fa-regular fa-hourglass me-1"></i> PENDIENTE</span>
                             @endif
                         </td>
-                        <td class="text-center">
+                        <td class="text-center no-export">
                             <div class="btn-group btn-group-sm">
                                 <button type="button" class="btn btn-outline-success" onclick="abrirModalAbonosCompra({{ $comp->id }})" title="Ver / Registrar Adelantos">
                                     <i class="fa-solid fa-money-bill-wave me-1"></i> Adelantos ({{ $comp->pagos->count() }})
@@ -192,6 +212,26 @@
                     </tr>
                 @endforeach
             </tbody>
+            <tfoot class="table-light fw-bold">
+                <tr>
+                    <td colspan="7" class="text-end text-uppercase">Total Consolidado Soles (PEN):</td>
+                    <td class="text-end">S/ {{ number_format($sumTotalPen, 2) }}</td>
+                    <td class="text-end text-success">S/ {{ number_format($sumPagadoPen, 2) }}</td>
+                    <td class="text-end text-danger">S/ {{ number_format($sumSaldoPen, 2) }}</td>
+                    <td></td>
+                    <td class="no-export"></td>
+                </tr>
+                @if($sumTotalUsd > 0)
+                <tr>
+                    <td colspan="7" class="text-end text-uppercase text-info-emphasis">Total Consolidado Dólares (USD):</td>
+                    <td class="text-end text-info-emphasis">$ {{ number_format($sumTotalUsd, 2) }}</td>
+                    <td class="text-end text-success">$ {{ number_format($sumPagadoUsd, 2) }}</td>
+                    <td class="text-end text-danger">$ {{ number_format($sumSaldoUsd, 2) }}</td>
+                    <td></td>
+                    <td class="no-export"></td>
+                </tr>
+                @endif
+            </tfoot>
         </table>
     </div>
 </div>

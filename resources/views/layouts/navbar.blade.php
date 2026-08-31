@@ -70,8 +70,18 @@
                     </a>
                 </li>
                 <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('empresas.index') }}">
+                        <i class="fa-solid fa-building text-primary"></i> Gestionar Empresas
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('sedes.index') }}">
+                        <i class="fa-solid fa-location-dot text-warning"></i> Gestionar Sedes
+                    </a>
+                </li>
+                <li>
                     <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('perfil.show') }}">
-                        <i class="fa-solid fa-user-gear text-primary"></i> Mi Perfil & Seguridad
+                        <i class="fa-solid fa-user-gear text-info"></i> Mi Perfil & Seguridad
                     </a>
                 </li>
                 <li><hr class="dropdown-divider"></li>

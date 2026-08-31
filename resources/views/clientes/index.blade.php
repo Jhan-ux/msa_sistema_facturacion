@@ -111,11 +111,31 @@
                     <th class="text-end">Adelantado</th>
                     <th class="text-end">Saldo x Cobrar</th>
                     <th>Estado</th>
-                    <th class="text-center">Acciones</th>
+                    <th class="text-center no-export">Acciones</th>
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $sumTotalPen = 0;
+                    $sumCobradoPen = 0;
+                    $sumSaldoPen = 0;
+
+                    $sumTotalUsd = 0;
+                    $sumCobradoUsd = 0;
+                    $sumSaldoUsd = 0;
+                @endphp
                 @foreach($comprobantes as $comp)
+                    @php
+                        if ($comp->moneda === 'USD') {
+                            $sumTotalUsd += $comp->monto_total;
+                            $sumCobradoUsd += $comp->monto_cobrado;
+                            $sumSaldoUsd += $comp->saldo_pendiente;
+                        } else {
+                            $sumTotalPen += $comp->monto_total;
+                            $sumCobradoPen += $comp->monto_cobrado;
+                            $sumSaldoPen += $comp->saldo_pendiente;
+                        }
+                    @endphp
                     <tr>
                         <td>
                             @if($comp->semaforo_color === 'danger')
@@ -160,7 +180,7 @@
                                 <div class="d-flex align-items-center gap-1">
                                     <span class="small font-monospace">{{ $comp->cliente->telefono }}</span>
                                     @if($comp->saldo_pendiente > 0 && !empty($comp->whatsapp_link))
-                                        <a href="{{ $comp->whatsapp_link }}" target="_blank" class="btn btn-sm btn-success py-0 px-2" title="Enviar recordatorio de cobro por WhatsApp">
+                                        <a href="{{ $comp->whatsapp_link }}" target="_blank" class="btn btn-sm btn-success py-0 px-2 no-print" title="Enviar recordatorio de cobro por WhatsApp">
                                             <i class="fa-brands fa-whatsapp"></i> Cobrar
                                         </a>
                                     @endif
@@ -191,7 +211,7 @@
                                 <span class="badge bg-warning text-dark"><i class="fa-regular fa-hourglass me-1"></i> PENDIENTE</span>
                             @endif
                         </td>
-                        <td class="text-center">
+                        <td class="text-center no-export">
                             <div class="btn-group btn-group-sm">
                                 <button type="button" class="btn btn-outline-primary" onclick="abrirModalAbonosVenta({{ $comp->id }})" title="Ver / Registrar Cobros">
                                     <i class="fa-solid fa-hand-holding-dollar me-1"></i> Cobros ({{ $comp->pagos->count() }})
@@ -208,6 +228,26 @@
                     </tr>
                 @endforeach
             </tbody>
+            <tfoot class="table-light fw-bold">
+                <tr>
+                    <td colspan="7" class="text-end text-uppercase">Total Cartera Soles (PEN):</td>
+                    <td class="text-end">S/ {{ number_format($sumTotalPen, 2) }}</td>
+                    <td class="text-end text-success">S/ {{ number_format($sumCobradoPen, 2) }}</td>
+                    <td class="text-end text-primary">S/ {{ number_format($sumSaldoPen, 2) }}</td>
+                    <td></td>
+                    <td class="no-export"></td>
+                </tr>
+                @if($sumTotalUsd > 0)
+                <tr>
+                    <td colspan="7" class="text-end text-uppercase text-info-emphasis">Total Cartera Dólares (USD):</td>
+                    <td class="text-end text-info-emphasis">$ {{ number_format($sumTotalUsd, 2) }}</td>
+                    <td class="text-end text-success">$ {{ number_format($sumCobradoUsd, 2) }}</td>
+                    <td class="text-end text-primary">$ {{ number_format($sumSaldoUsd, 2) }}</td>
+                    <td></td>
+                    <td class="no-export"></td>
+                </tr>
+                @endif
+            </tfoot>
         </table>
     </div>
 </div>

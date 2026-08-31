@@ -60,6 +60,20 @@
             </a>
         </li>
 
+        <li class="sidebar-heading">Administración & Estructura</li>
+        <li class="sidebar-item">
+            <a href="{{ route('empresas.index') }}" class="sidebar-link {{ request()->routeIs('empresas.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-building text-primary"></i>
+                <span>Empresas</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a href="{{ route('sedes.index') }}" class="sidebar-link {{ request()->routeIs('sedes.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-location-dot text-warning"></i>
+                <span>Sedes & Sucursales</span>
+            </a>
+        </li>
+
         <li class="sidebar-heading">Cuenta & Configuración</li>
         <li class="sidebar-item">
             <a href="{{ route('perfil.show') }}" class="sidebar-link {{ request()->routeIs('perfil.show') ? 'active' : '' }}">
